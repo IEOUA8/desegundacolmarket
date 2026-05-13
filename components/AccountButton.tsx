@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, ReceiptText, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -61,13 +61,22 @@ export function AccountButton() {
   }
 
   return (
-    <button
-      className="focus-ring grid h-10 w-10 place-items-center"
-      aria-label={`Cerrar sesion de ${email}`}
-      onClick={handleLogout}
-      type="button"
-    >
-      <LogOut size={20} />
-    </button>
+    <div className="flex items-center gap-1">
+      <Link
+        className="focus-ring grid h-10 w-10 place-items-center"
+        aria-label="Mis ordenes"
+        href="/account/orders"
+      >
+        <ReceiptText size={20} />
+      </Link>
+      <button
+        className="focus-ring grid h-10 w-10 place-items-center"
+        aria-label={`Cerrar sesion de ${email}`}
+        onClick={handleLogout}
+        type="button"
+      >
+        <LogOut size={20} />
+      </button>
+    </div>
   );
 }

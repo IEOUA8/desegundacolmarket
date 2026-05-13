@@ -211,3 +211,23 @@ export async function getOrderById(orderId: string) {
     }
   });
 }
+
+export async function getUserOrders() {
+  const user = await getAuthenticatedAppUser();
+
+  if (!user) {
+    return null;
+  }
+
+  return prisma.order.findMany({
+    where: {
+      userId: user.id
+    },
+    include: {
+      items: true
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+}
