@@ -4,7 +4,9 @@
 
 1. Instala dependencias con `npm install`.
 2. Copia `.env.example` a `.env` y reemplaza los valores reales.
-3. Ejecuta `npm run dev` y abre `http://localhost:3000`.
+3. Levanta PostgreSQL con `npm run db:up`.
+4. Ejecuta `npm run prisma:migrate` y `npm run prisma:seed`.
+5. Ejecuta `npm run dev` y abre `http://localhost:3000`.
 
 ## Base de datos
 

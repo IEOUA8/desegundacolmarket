@@ -14,6 +14,9 @@ Starter de marketplace/ecommerce de moda de segunda mano basado en el documento 
 
 ```bash
 npm install
+npm run db:up
+npm run prisma:migrate
+npm run prisma:seed
 npm run dev
 ```
 
@@ -24,8 +27,11 @@ Abre `http://localhost:3000`.
 - `npm run dev`: servidor local.
 - `npm run build`: build de produccion.
 - `npm run typecheck`: validacion TypeScript.
+- `npm run db:up`: levanta PostgreSQL local con Docker.
+- `npm run db:down`: apaga PostgreSQL local.
 - `npm run prisma:generate`: genera Prisma Client.
 - `npm run prisma:migrate`: crea/aplica migraciones locales.
+- `npm run prisma:seed`: carga categorias, seller y productos iniciales.
 
 ## Configuracion
 

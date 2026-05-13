@@ -11,17 +11,27 @@
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:reset": "prisma migrate reset"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
+    "@prisma/adapter-pg": "latest",
     "@prisma/client": "latest",
     "@tanstack/react-query": "latest",
     "axios": "latest",
     "clsx": "latest",
+    "dotenv": "latest",
     "framer-motion": "latest",
     "lucide-react": "latest",
     "next": "latest",
+    "pg": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "latest",
@@ -31,6 +41,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
+    "@types/pg": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",
@@ -38,6 +49,7 @@
     "postcss": "latest",
     "prisma": "latest",
     "tailwindcss": "latest",
+    "tsx": "latest",
     "typescript": "latest"
   }
 }
