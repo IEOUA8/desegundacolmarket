@@ -1,5 +1,6 @@
-import { Search, UserRound } from "lucide-react";
+import { Search } from "lucide-react";
 import Link from "next/link";
+import { AccountButton } from "@/components/AccountButton";
 import { CartButton } from "@/components/CartButton";
 
 export function Header() {
@@ -18,9 +19,7 @@ export function Header() {
           <button className="focus-ring grid h-10 w-10 place-items-center" aria-label="Buscar" type="button">
             <Search size={20} />
           </button>
-          <button className="focus-ring grid h-10 w-10 place-items-center" aria-label="Cuenta" type="button">
-            <UserRound size={20} />
-          </button>
+          <AccountButton />
           <CartButton />
         </div>
       </div>

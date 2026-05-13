@@ -1,7 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import type { MarketplaceProduct } from "@/lib/products";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const DEMO_CUSTOMER_EMAIL = "customer@desegunda.co";
+export class AuthRequiredError extends Error {
+  constructor() {
+    super("Authentication is required.");
+  }
+}
 
 export type CartLine = {
   id: string;
@@ -48,21 +53,63 @@ const cartInclude = {
   }
 };
 
-async function getDemoCustomer() {
-  return prisma.user.upsert({
+export function emptyCart(): CartSummary {
+  return {
+    id: "",
+    items: [],
+    itemCount: 0,
+    subtotal: 0
+  };
+}
+
+async function getAuthenticatedAppUser() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) {
+    return null;
+  }
+
+  const existingUser = await prisma.user.findFirst({
     where: {
-      email: DEMO_CUSTOMER_EMAIL
-    },
-    update: {},
-    create: {
-      email: DEMO_CUSTOMER_EMAIL,
-      name: "Cliente Demo"
+      OR: [{ supabaseAuthId: user.id }, { email: user.email }]
+    }
+  });
+
+  if (existingUser) {
+    return prisma.user.update({
+      where: {
+        id: existingUser.id
+      },
+      data: {
+        supabaseAuthId: user.id,
+        email: user.email,
+        name:
+          existingUser.name ??
+          user.user_metadata.full_name ??
+          user.user_metadata.name ??
+          user.email.split("@")[0]
+      }
+    });
+  }
+
+  return prisma.user.create({
+    data: {
+      supabaseAuthId: user.id,
+      email: user.email,
+      name: user.user_metadata.full_name ?? user.user_metadata.name ?? user.email.split("@")[0]
     }
   });
 }
 
 async function getOrCreateCart() {
-  const user = await getDemoCustomer();
+  const user = await getAuthenticatedAppUser();
+
+  if (!user) {
+    throw new AuthRequiredError();
+  }
 
   return prisma.cart.upsert({
     where: {
@@ -104,8 +151,16 @@ function serializeCart(cart: Awaited<ReturnType<typeof getOrCreateCart>>): CartS
 }
 
 export async function getCart() {
-  const cart = await getOrCreateCart();
-  return serializeCart(cart);
+  try {
+    const cart = await getOrCreateCart();
+    return serializeCart(cart);
+  } catch (error) {
+    if (error instanceof AuthRequiredError) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export async function addCartItem(productId: string, quantity = 1) {

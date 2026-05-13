@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { CartProductInput, CartSummary } from "@/lib/cart";
 import { useMarketplaceStore } from "@/store/useMarketplaceStore";
@@ -16,6 +17,7 @@ export function AddToCartButton({
   className,
   compact = false
 }: AddToCartButtonProps) {
+  const router = useRouter();
   const [status, setStatus] = useState<"idle" | "loading" | "added" | "error">("idle");
   const addCartItem = useMarketplaceStore((state) => state.addCartItem);
   const hydrateCart = useMarketplaceStore((state) => state.hydrateCart);
@@ -48,6 +50,11 @@ export function AddToCartButton({
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          router.push("/login?next=/cart");
+          return;
+        }
+
         throw new Error("Unable to add product to cart.");
       }
 

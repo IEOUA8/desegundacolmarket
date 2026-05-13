@@ -14,6 +14,13 @@ export const metadata = {
 
 export default async function CartPage() {
   const cart = await getCart();
+  const isAuthenticated = cart !== null;
+  const visibleCart = cart ?? {
+    id: "",
+    items: [],
+    itemCount: 0,
+    subtotal: 0
+  };
 
   return (
     <main>
@@ -28,9 +35,22 @@ export default async function CartPage() {
       </section>
 
       <section className="container-shell grid gap-8 py-10 lg:grid-cols-[1fr_360px]">
-        {cart.items.length > 0 ? (
+        {!isAuthenticated ? (
+          <div className="border border-[color:var(--line)] bg-white p-8">
+            <h2 className="font-serif text-3xl">Inicia sesion para ver tu carrito</h2>
+            <p className="mt-3 leading-7 text-[color:var(--muted)]">
+              Tu carrito ahora se guarda por usuario para que puedas continuar tu compra en cualquier dispositivo.
+            </p>
+            <Link
+              className="focus-ring mt-6 inline-flex h-12 items-center bg-[color:var(--ink)] px-5 text-sm font-semibold text-white"
+              href="/login?next=/cart"
+            >
+              Iniciar sesion
+            </Link>
+          </div>
+        ) : visibleCart.items.length > 0 ? (
           <div className="space-y-3">
-            {cart.items.map((item) => (
+            {visibleCart.items.map((item) => (
               <article
                 className="grid gap-4 border border-[color:var(--line)] bg-white p-4 sm:grid-cols-[120px_1fr_auto]"
                 key={item.id}
@@ -72,15 +92,15 @@ export default async function CartPage() {
         <aside className="h-fit border border-[color:var(--line)] bg-white p-6">
           <div className="flex items-center justify-between text-sm text-[color:var(--muted)]">
             <span>Productos</span>
-            <span>{cart.itemCount}</span>
+            <span>{visibleCart.itemCount}</span>
           </div>
           <div className="mt-4 flex items-center justify-between border-t border-[color:var(--line)] pt-4 text-lg font-semibold">
             <span>Subtotal</span>
-            <span>{currencyFormatter.format(cart.subtotal)}</span>
+            <span>{currencyFormatter.format(visibleCart.subtotal)}</span>
           </div>
           <button
             className="focus-ring mt-6 h-12 w-full bg-[color:var(--ink)] text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={cart.items.length === 0}
+            disabled={!isAuthenticated || visibleCart.items.length === 0}
             type="button"
           >
             Continuar compra

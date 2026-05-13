@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { addCartItem } from "@/lib/cart";
+import { addCartItem, AuthRequiredError } from "@/lib/cart";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,10 @@ export async function POST(request: Request) {
     const cart = await addCartItem(parsed.data.productId, parsed.data.quantity);
     return NextResponse.json(cart);
   } catch (error) {
+    if (error instanceof AuthRequiredError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to update cart." },
       { status: 400 }

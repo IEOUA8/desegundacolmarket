@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { removeCartItem, updateCartItemQuantity } from "@/lib/cart";
+import { AuthRequiredError, removeCartItem, updateCartItemQuantity } from "@/lib/cart";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +34,10 @@ export async function PATCH(request: Request, { params }: CartItemRouteProps) {
     const cart = await updateCartItemQuantity(parsedParams.data.itemId, parsed.data.quantity);
     return NextResponse.json(cart);
   } catch (error) {
+    if (error instanceof AuthRequiredError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to update cart item." },
       { status: 400 }
@@ -52,6 +56,10 @@ export async function DELETE(_request: Request, { params }: CartItemRouteProps) 
     const cart = await removeCartItem(parsedParams.data.itemId);
     return NextResponse.json(cart);
   } catch (error) {
+    if (error instanceof AuthRequiredError) {
+      return NextResponse.json({ error: error.message }, { status: 401 });
+    }
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unable to remove cart item." },
       { status: 400 }

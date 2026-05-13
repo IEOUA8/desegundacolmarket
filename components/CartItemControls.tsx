@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { CartLine, CartSummary } from "@/lib/cart";
 import { useMarketplaceStore } from "@/store/useMarketplaceStore";
@@ -10,6 +11,7 @@ type CartItemControlsProps = {
 };
 
 export function CartItemControls({ item }: CartItemControlsProps) {
+  const router = useRouter();
   const [pending, setPending] = useState(false);
   const hydrateCart = useMarketplaceStore((state) => state.hydrateCart);
   const updateLocalQuantity = useMarketplaceStore((state) => state.updateCartItemQuantity);
@@ -31,6 +33,11 @@ export function CartItemControls({ item }: CartItemControlsProps) {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          router.push("/login?next=/cart");
+          return;
+        }
+
         throw new Error("Unable to update cart item.");
       }
 
@@ -51,6 +58,11 @@ export function CartItemControls({ item }: CartItemControlsProps) {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          router.push("/login?next=/cart");
+          return;
+        }
+
         throw new Error("Unable to remove cart item.");
       }
 
