@@ -15,6 +15,8 @@ El proyecto queda preparado para PostgreSQL con Prisma.
 - Desarrollo rapido: Supabase, Neon o Railway PostgreSQL.
 - Produccion: PostgreSQL administrado con backups y variables separadas por ambiente.
 - Comandos utiles: `npm run prisma:generate`, `npm run prisma:migrate`, `npm run prisma:studio`.
+- Supabase: configura `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- Para aplicar migraciones en produccion usa `npx prisma migrate deploy`.
 
 ## Vercel
 

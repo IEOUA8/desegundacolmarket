@@ -7,6 +7,7 @@ Starter de marketplace/ecommerce de moda de segunda mano basado en el documento 
 - Next.js + React + TypeScript
 - Tailwind CSS
 - Prisma + PostgreSQL
+- Supabase preparado para Auth, Storage y PostgreSQL administrado
 - Zustand, Axios, React Hook Form, Zod
 - Preparado para Vercel y base de datos administrada
 
@@ -36,6 +37,9 @@ Abre `http://localhost:3000`.
 ## Configuracion
 
 Copia `.env.example` a `.env` y completa las credenciales reales antes de conectar servicios externos.
+
+- Supabase: ver `docs/supabase.md`.
+- Modelo de datos: ver `docs/database-design.md`.
 
 ## Documento base
 

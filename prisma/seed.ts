@@ -92,6 +92,23 @@ async function main() {
     }
   });
 
+  await prisma.sellerProfile.upsert({
+    where: { userId: seller.id },
+    update: {
+      storeName: "De Segunda Curaduria",
+      slug: "de-segunda-curaduria",
+      city: "Bogota",
+      verified: true
+    },
+    create: {
+      userId: seller.id,
+      storeName: "De Segunda Curaduria",
+      slug: "de-segunda-curaduria",
+      city: "Bogota",
+      verified: true
+    }
+  });
+
   for (const category of categories) {
     await prisma.category.upsert({
       where: { slug: category.slug },
@@ -101,15 +118,34 @@ async function main() {
   }
 
   for (const product of products) {
-    const { categorySlug, ...data } = product;
+    const { categorySlug, images, ...data } = product;
 
     await prisma.product.upsert({
       where: { slug: product.slug },
-      update: data,
+      update: {
+        ...data,
+        seller: { connect: { id: seller.id } },
+        category: { connect: { slug: categorySlug } },
+        images: {
+          deleteMany: {},
+          create: images.map((url, position) => ({
+            url,
+            alt: product.name,
+            position
+          }))
+        }
+      },
       create: {
         ...data,
         seller: { connect: { id: seller.id } },
-        category: { connect: { slug: categorySlug } }
+        category: { connect: { slug: categorySlug } },
+        images: {
+          create: images.map((url, position) => ({
+            url,
+            alt: product.name,
+            position
+          }))
+        }
       }
     });
   }

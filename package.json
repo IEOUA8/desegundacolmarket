@@ -24,6 +24,7 @@
     "@hookform/resolvers": "latest",
     "@prisma/adapter-pg": "latest",
     "@prisma/client": "latest",
+    "@supabase/supabase-js": "^2.105.4",
     "@tanstack/react-query": "latest",
     "axios": "latest",
     "clsx": "latest",
