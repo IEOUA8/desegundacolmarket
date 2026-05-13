@@ -1,6 +1,7 @@
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { AddToCartButton } from "@/components/AddToCartButton";
 import { currencyFormatter, type MarketplaceProduct } from "@/lib/products";
 
 type ProductCardProps = {
@@ -44,13 +45,11 @@ export function ProductCard({ product }: ProductCardProps) {
           <span>
             {product.size} · {product.condition}
           </span>
-          <button
-            className="focus-ring grid h-9 w-9 place-items-center bg-[color:var(--ink)] text-white"
-            aria-label={`Agregar ${product.name} al carrito`}
-            type="button"
-          >
-            <ShoppingBag size={17} />
-          </button>
+          <AddToCartButton
+            className="focus-ring grid h-9 w-9 place-items-center bg-[color:var(--ink)] text-white disabled:cursor-not-allowed disabled:opacity-50"
+            compact
+            product={product}
+          />
         </div>
       </div>
     </article>

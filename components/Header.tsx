@@ -1,5 +1,6 @@
-import { Search, ShoppingBag, UserRound } from "lucide-react";
+import { Search, UserRound } from "lucide-react";
 import Link from "next/link";
+import { CartButton } from "@/components/CartButton";
 
 export function Header() {
   return (
@@ -20,9 +21,7 @@ export function Header() {
           <button className="focus-ring grid h-10 w-10 place-items-center" aria-label="Cuenta" type="button">
             <UserRound size={20} />
           </button>
-          <button className="focus-ring grid h-10 w-10 place-items-center bg-[color:var(--ink)] text-white" aria-label="Carrito" type="button">
-            <ShoppingBag size={19} />
-          </button>
+          <CartButton />
         </div>
       </div>
     </header>

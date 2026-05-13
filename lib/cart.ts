@@ -1,0 +1,148 @@
+import { prisma } from "@/lib/prisma";
+import type { MarketplaceProduct } from "@/lib/products";
+
+const DEMO_CUSTOMER_EMAIL = "customer@desegunda.co";
+
+export type CartLine = {
+  id: string;
+  productId: string;
+  slug: string;
+  name: string;
+  brand: string;
+  size: string;
+  condition: string;
+  price: number;
+  quantity: number;
+  image: string;
+  stock: number;
+};
+
+export type CartSummary = {
+  id: string;
+  items: CartLine[];
+  itemCount: number;
+  subtotal: number;
+};
+
+export type CartProductInput = Pick<
+  MarketplaceProduct,
+  "id" | "slug" | "name" | "brand" | "size" | "condition" | "price" | "image" | "stock"
+>;
+
+const cartInclude = {
+  items: {
+    include: {
+      product: {
+        include: {
+          images: {
+            orderBy: {
+              position: "asc" as const
+            }
+          }
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "asc" as const
+    }
+  }
+};
+
+async function getDemoCustomer() {
+  return prisma.user.upsert({
+    where: {
+      email: DEMO_CUSTOMER_EMAIL
+    },
+    update: {},
+    create: {
+      email: DEMO_CUSTOMER_EMAIL,
+      name: "Cliente Demo"
+    }
+  });
+}
+
+async function getOrCreateCart() {
+  const user = await getDemoCustomer();
+
+  return prisma.cart.upsert({
+    where: {
+      userId: user.id
+    },
+    update: {},
+    create: {
+      userId: user.id
+    },
+    include: cartInclude
+  });
+}
+
+function serializeCart(cart: Awaited<ReturnType<typeof getOrCreateCart>>): CartSummary {
+  const items = cart.items.map((item) => {
+    const image = item.product.images[0]?.url ?? "/window.svg";
+
+    return {
+      id: item.id,
+      productId: item.productId,
+      slug: item.product.slug,
+      name: item.product.name,
+      brand: item.product.brand,
+      size: item.product.size,
+      condition: item.product.condition,
+      price: item.product.price,
+      quantity: item.quantity,
+      image,
+      stock: item.product.stock
+    };
+  });
+
+  return {
+    id: cart.id,
+    items,
+    itemCount: items.reduce((total, item) => total + item.quantity, 0),
+    subtotal: items.reduce((total, item) => total + item.price * item.quantity, 0)
+  };
+}
+
+export async function getCart() {
+  const cart = await getOrCreateCart();
+  return serializeCart(cart);
+}
+
+export async function addCartItem(productId: string, quantity = 1) {
+  const cart = await getOrCreateCart();
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId
+    },
+    select: {
+      id: true,
+      stock: true
+    }
+  });
+
+  if (!product || product.stock <= 0) {
+    throw new Error("Product is not available.");
+  }
+
+  const current = cart.items.find((item) => item.productId === productId);
+  const nextQuantity = Math.min((current?.quantity ?? 0) + quantity, product.stock);
+
+  await prisma.cartItem.upsert({
+    where: {
+      cartId_productId: {
+        cartId: cart.id,
+        productId
+      }
+    },
+    update: {
+      quantity: nextQuantity
+    },
+    create: {
+      cartId: cart.id,
+      productId,
+      quantity: Math.min(quantity, product.stock)
+    }
+  });
+
+  return getCart();
+}

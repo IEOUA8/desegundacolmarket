@@ -1,8 +1,9 @@
-import { ArrowLeft, BadgeCheck, Heart, MapPin, ShoppingBag } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Heart, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCartButton } from "@/components/AddToCartButton";
 import { Header } from "@/components/Header";
 import { currencyFormatter, getProductBySlug } from "@/lib/products";
 
@@ -120,13 +121,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
-                <button
-                  className="focus-ring inline-flex h-12 items-center justify-center gap-2 bg-[color:var(--ink)] px-5 text-sm font-semibold text-white"
-                  type="button"
-                >
-                  <ShoppingBag size={18} />
-                  Agregar al carrito
-                </button>
+                <AddToCartButton
+                  className="focus-ring inline-flex h-12 items-center justify-center gap-2 bg-[color:var(--ink)] px-5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  product={product}
+                />
                 <button
                   className="focus-ring inline-flex h-12 items-center justify-center gap-2 border border-[color:var(--line)] px-5 text-sm font-semibold"
                   type="button"
