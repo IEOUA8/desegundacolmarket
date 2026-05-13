@@ -1,16 +1,17 @@
 import { Search, ShoppingBag, UserRound } from "lucide-react";
+import Link from "next/link";
 
 export function Header() {
   return (
     <header className="border-b border-[color:var(--line)] bg-[color:var(--background)]">
       <div className="container-shell flex h-20 items-center justify-between gap-4">
-        <a className="font-serif text-2xl font-semibold" href="#">
+        <Link className="font-serif text-2xl font-semibold" href="/">
           De Segunda
-        </a>
+        </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-[color:var(--muted)] md:flex">
-          <a href="#marketplace">Marketplace</a>
-          <a href="#curaduria">Curaduria</a>
-          <a href="#vender">Vender</a>
+          <Link href="/shop">Marketplace</Link>
+          <Link href="/#curaduria">Curaduria</Link>
+          <Link href="/#vender">Vender</Link>
         </nav>
         <div className="flex items-center gap-2">
           <button className="focus-ring grid h-10 w-10 place-items-center" aria-label="Buscar" type="button">

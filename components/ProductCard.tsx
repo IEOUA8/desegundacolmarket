@@ -1,30 +1,33 @@
 import { Heart, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import { currencyFormatter, type Product } from "@/data/products";
+import Link from "next/link";
+import { currencyFormatter, type MarketplaceProduct } from "@/lib/products";
 
 type ProductCardProps = {
-  product: Product;
+  product: MarketplaceProduct;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <article className="group overflow-hidden border border-[color:var(--line)] bg-white">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d7]">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-        />
-        <button
-          className="focus-ring absolute right-3 top-3 grid h-10 w-10 place-items-center bg-white/90 text-[color:var(--ink)] shadow-sm"
-          aria-label={`Guardar ${product.name}`}
-          type="button"
-        >
-          <Heart size={18} />
-        </button>
-      </div>
+    <article className="group relative overflow-hidden border border-[color:var(--line)] bg-white">
+      <Link className="block" href={`/product/${product.slug}`}>
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d7]">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+        </div>
+      </Link>
+      <button
+        className="focus-ring absolute right-3 top-3 grid h-10 w-10 place-items-center bg-white/90 text-[color:var(--ink)] shadow-sm"
+        aria-label={`Guardar ${product.name}`}
+        type="button"
+      >
+        <Heart size={18} />
+      </button>
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>

@@ -3,9 +3,8 @@ import Image from "next/image";
 import { FilterBar } from "@/components/FilterBar";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { getCategories, getFeaturedProducts, getProducts } from "@/lib/products";
 
-const categories = ["Chaquetas", "Denim", "Bolsos", "Camisas", "Zapatos"];
 const valueProps = [
   {
     title: "Curaduria",
@@ -24,8 +23,13 @@ const valueProps = [
   }
 ];
 
-export default function Home() {
-  const featured = products.filter((product) => product.featured);
+export default async function Home() {
+  const [products, featuredProducts, categories] = await Promise.all([
+    getProducts(),
+    getFeaturedProducts(4),
+    getCategories()
+  ]);
+  const heroProducts = featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4);
 
   return (
     <main>
@@ -45,7 +49,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 className="focus-ring inline-flex h-12 items-center gap-2 bg-white px-5 text-sm font-semibold text-[color:var(--ink)]"
-                href="#marketplace"
+                href="/shop"
               >
                 Explorar prendas
                 <ArrowRight size={17} />
@@ -59,7 +63,7 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 self-end">
-            {products.slice(0, 4).map((product, index) => (
+            {heroProducts.slice(0, 4).map((product, index) => (
               <div
                 className={`relative h-64 w-full overflow-hidden ${index % 2 === 0 ? "translate-y-6" : ""}`}
                 key={product.id}
@@ -89,13 +93,13 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
-              <button
+              <a
                 className="focus-ring h-10 border border-[color:var(--line)] bg-white px-4 text-sm"
-                key={category}
-                type="button"
+                href={`/shop?category=${category.slug}`}
+                key={category.id}
               >
-                {category}
-              </button>
+                {category.name}
+              </a>
             ))}
           </div>
         </div>
