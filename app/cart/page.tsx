@@ -98,13 +98,17 @@ export default async function CartPage() {
             <span>Subtotal</span>
             <span>{currencyFormatter.format(visibleCart.subtotal)}</span>
           </div>
-          <button
-            className="focus-ring mt-6 h-12 w-full bg-[color:var(--ink)] text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={!isAuthenticated || visibleCart.items.length === 0}
-            type="button"
+          <Link
+            aria-disabled={!isAuthenticated || visibleCart.items.length === 0}
+            className={`focus-ring mt-6 flex h-12 w-full items-center justify-center text-sm font-semibold text-white ${
+              !isAuthenticated || visibleCart.items.length === 0
+                ? "pointer-events-none bg-[color:var(--ink)] opacity-50"
+                : "bg-[color:var(--ink)]"
+            }`}
+            href="/checkout"
           >
             Continuar compra
-          </button>
+          </Link>
           <Link
             className="focus-ring mt-3 flex h-12 items-center justify-center border border-[color:var(--line)] text-sm font-semibold"
             href="/shop"

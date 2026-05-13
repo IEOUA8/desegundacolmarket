@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { AuthRequiredError, removeCartItem, updateCartItemQuantity } from "@/lib/cart";
+import { AuthRequiredError } from "@/lib/auth";
+import { removeCartItem, updateCartItemQuantity } from "@/lib/cart";
 
 export const dynamic = "force-dynamic";
 
