@@ -35,6 +35,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             email,
             password,
             options: {
+              emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
               data: {
                 name
               }

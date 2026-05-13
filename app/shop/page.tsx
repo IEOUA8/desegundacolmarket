@@ -14,6 +14,8 @@ export const metadata = {
   description: "Explora prendas y accesorios curados de segunda mano."
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ShopPage({ searchParams }: ShopPageProps) {
   const [{ category }, products, categories] = await Promise.all([
     searchParams,

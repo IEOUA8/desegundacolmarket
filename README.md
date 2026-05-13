@@ -31,6 +31,7 @@ Abre `http://localhost:3000`.
 - `npm run db:up`: levanta PostgreSQL local con Docker.
 - `npm run db:down`: apaga PostgreSQL local.
 - `npm run prisma:generate`: genera Prisma Client.
+- `npm run prisma:deploy`: aplica migraciones en entornos remotos.
 - `npm run prisma:migrate`: crea/aplica migraciones locales.
 - `npm run prisma:seed`: carga categorias, seller y productos iniciales.
 
@@ -39,6 +40,7 @@ Abre `http://localhost:3000`.
 Copia `.env.example` a `.env` y completa las credenciales reales antes de conectar servicios externos.
 
 - Supabase: ver `docs/supabase.md`.
+- Vercel: ver `docs/vercel.md`.
 - Modelo de datos: ver `docs/database-design.md`.
 
 ## Documento base

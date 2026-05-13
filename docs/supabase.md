@@ -16,13 +16,23 @@ NEXT_PUBLIC_SUPABASE_URL="https://btawegolhzbuztkaswaj.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
 ```
 
-Para migraciones Prisma contra Supabase falta el connection string de PostgreSQL:
+Para Prisma con Supabase en este proyecto se usa el session pooler:
 
 ```bash
-DATABASE_URL="postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+DATABASE_URL="postgresql://postgres.btawegolhzbuztkaswaj:[PASSWORD]@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require&sslaccept=accept_invalid_certs&connect_timeout=10"
 ```
 
-Para migraciones, Supabase tambien suele ofrecer una conexion directa en puerto `5432`. Esa es la opcion mas comoda si esta habilitada.
+El transaction pooler `6543` no se usa para Prisma Migrate porque puede bloquear la verificacion de conexion. El session pooler `5432` funciona para migraciones y queries server-side.
+
+## Auth redirects
+
+Configura estos redirects en Supabase Authentication:
+
+```bash
+http://localhost:3000/auth/callback
+https://TU-DOMINIO.vercel.app/auth/callback
+https://*.vercel.app/auth/callback
+```
 
 ## Uso recomendado
 
