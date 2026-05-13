@@ -23,6 +23,8 @@ type MarketplaceState = {
   toggleSavedProduct: (productId: string) => void;
   hydrateCart: (items: CartItem[]) => void;
   addCartItem: (item: CartItem) => void;
+  updateCartItemQuantity: (productId: string, quantity: number) => void;
+  removeCartItem: (productId: string) => void;
   cartItemCount: () => number;
   cartSubtotal: () => number;
 };
@@ -67,6 +69,24 @@ export const useMarketplaceStore = create<MarketplaceState>()(
             )
           };
         }),
+      updateCartItemQuantity: (productId, quantity) =>
+        set((state) => ({
+          cartItems:
+            quantity <= 0
+              ? state.cartItems.filter((item) => item.productId !== productId)
+              : state.cartItems.map((item) =>
+                  item.productId === productId
+                    ? {
+                        ...item,
+                        quantity: Math.min(quantity, item.stock)
+                      }
+                    : item
+                )
+        })),
+      removeCartItem: (productId) =>
+        set((state) => ({
+          cartItems: state.cartItems.filter((item) => item.productId !== productId)
+        })),
       cartItemCount: () =>
         get().cartItems.reduce((total, item) => total + item.quantity, 0),
       cartSubtotal: () =>

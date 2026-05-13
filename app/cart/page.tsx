@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CartItemControls } from "@/components/CartItemControls";
 import { Header } from "@/components/Header";
 import { getCart } from "@/lib/cart";
 import { currencyFormatter } from "@/lib/products";
@@ -54,6 +55,7 @@ export default async function CartPage() {
                     {item.size} · {item.condition}
                   </p>
                   <p className="mt-3 text-sm">Cantidad: {item.quantity}</p>
+                  <CartItemControls item={item} />
                 </div>
                 <p className="font-semibold">
                   {currencyFormatter.format(item.price * item.quantity)}
